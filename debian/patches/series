@@ -1,4 +1,0 @@
-0001-trace-cmd-append-to-CFLAGS-instead-of-being-override.patch
-0002-trace-cmd-Use-correct-size-for-rest-of-record.patch
-0003-trace-cmd-Convert-length-field-endian-for-large-even.patch
-0004-trace-cmd-Fix-split-record-size-with-large-events.patch
