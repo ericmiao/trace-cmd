@@ -1,3 +1,10 @@
+trace-cmd (2.0.1-0ubuntu1) precise; urgency=low
+
+  * Updated to trace-cmd v2.0.1
+    - LP: #1068464
+
+ -- Eric Miao <eric.y.miao@gmail.com>  Fri, 19 Oct 2012 14:31:53 +0800
+
 trace-cmd (1.0.3-0ubuntu1) maverick; urgency=low
 
   * Initial release.
