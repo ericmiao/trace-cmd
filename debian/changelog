@@ -1,0 +1,6 @@
+trace-cmd (1.0.3-0ubuntu1) maverick; urgency=low
+
+  * Initial release.
+    - LP: #593343
+
+ -- Chase Douglas <chase.douglas@canonical.com>  Thu, 10 Jun 2010 14:59:05 -0400

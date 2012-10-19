@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/makefile.mk
+
+OPTS=prefix=/usr plugin_dir=/usr/lib/trace-cmd/plugins MANPAGE_DOCBOOK_XSL=/usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl DESTDIR=$(DEB_DESTDIR) V=1
+
+DEB_MAKE_CLEAN_TARGET=clean doc_clean $(OPTS)
+DEB_MAKE_BUILD_TARGET=gui doc $(OPTS)
+DEB_MAKE_INSTALL_TARGET=install_gui install_doc $(OPTS)
