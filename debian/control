@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Ubuntu Kernel Team <kernel-team@lists.ubuntu.com>
 Standards-Version: 3.8.4.0
-Build-Depends: debhelper (>= 7), cdbs, asciidoc, docbook-xsl, xsltproc, libgtk2.0-dev, libxml2-dev
+Build-Depends: debhelper (>= 7), cdbs, asciidoc, docbook-xsl, xsltproc, libgtk2.0-dev, libxml2-dev, python-dev, swig
 Vcs-Git: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git
 Vcs-Browser: http://git.kernel.org/?p=linux/kernel/git/rostedt/trace-cmd.git
 
