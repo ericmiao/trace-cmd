@@ -1,3 +1,10 @@
+trace-cmd (2.0.1-0ubuntu2) precise; urgency=low
+
+  * Add build support for python plugins
+    - LP: #906769
+
+ -- Eric Miao <eric.miao@canonical.com>  Tue, 23 Oct 2012 11:21:53 +0800
+
 trace-cmd (2.0.1-0ubuntu1) precise; urgency=low
 
   * Updated to trace-cmd v2.0.1
