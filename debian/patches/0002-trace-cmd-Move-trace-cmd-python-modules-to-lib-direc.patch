@@ -1,0 +1,29 @@
+From aa6fa69beb9860b248a2f6030481e4c9286cefcb Mon Sep 17 00:00:00 2001
+From: Eric Miao <eric.y.miao@gmail.com>
+Date: Tue, 23 Oct 2012 15:27:58 +0800
+Subject: [PATCH 2/3] trace-cmd: Move trace-cmd python modules to lib/
+ directory
+
+lib/ would be a better place to place shared objects of python modules
+
+Signed-off-by: Eric Miao <eric.y.miao@gmail.com>
+---
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 068b0ab..85fdff9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -57,7 +57,7 @@ plugin_dir = $(HOME)/.trace-cmd/plugins
+ python_dir = $(HOME)/.trace-cmd/python
+ else
+ plugin_dir = $(prefix)/lib/trace-cmd/plugins
+-python_dir = $(prefix)/share/trace-cmd/python
++python_dir = $(prefix)/lib/trace-cmd/python
+ PLUGIN_DIR = -DPLUGIN_DIR="$(plugin_dir)"
+ PYTHON_DIR = -DPYTHON_DIR="$(python_dir)"
+ PLUGIN_DIR_SQ = '$(subst ','\'',$(PLUGIN_DIR))'
+-- 
+1.7.9.5
+
