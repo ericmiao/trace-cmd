@@ -1,3 +1,11 @@
+trace-cmd (2.0.1-0ubuntu3) precise; urgency=low
+
+  * trace-cmd: Add support for python GUI plugins
+  * trace-cmd: Move trace-cmd python modules to lib/ directory
+  * python: fix further issues of struct record rename
+
+ -- Eric Miao <eric.miao@canonical.com>  Wed, 24 Oct 2012 17:58:24 +0800
+
 trace-cmd (2.0.1-0ubuntu2) precise; urgency=low
 
   * Add build support for python plugins
