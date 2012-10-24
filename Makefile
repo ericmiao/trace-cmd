@@ -83,8 +83,8 @@ PYTHON_GUI	:= ctracecmd.so ctracecmdgui.so
 # Can build python?
 ifeq ($(shell sh -c "python-config --includes > /dev/null 2>&1 && echo y"), y)
 	PYTHON_PLUGINS := plugin_python.so
-	BUILD_PYTHON := $(PYTHON) $(PYTHON_PLUGINS)
-	PYTHON_SO_INSTALL := ctracecmd.install
+	BUILD_PYTHON := $(PYTHON_GUI) $(PYTHON_PLUGINS)
+	PYTHON_SO_INSTALL := ctracecmd.install ctracecmdgui.install
 	PYTHON_PY_INSTALL := event-viewer.install tracecmd.install tracecmdgui.install
 endif
 endif # NO_PYTHON
@@ -376,6 +376,11 @@ libparsevent.a: $(PEVENT_LIB_OBJS)
 $(TCMD_LIB_OBJS): %.o: $(src)/%.c
 	$(Q)$(do_fpic_compile)
 
+ifeq ($(BUILDGUI),1)
+$(TRACE_VIEW_OBJS): %.o: $(src)/%.c
+	$(Q)$(do_fpic_compile)
+endif
+
 libtracecmd.so: $(TCMD_LIB_OBJS)
 	$(Q)$(do_compile_shared_library)
 
@@ -549,10 +554,10 @@ ctracecmd.so: $(TCMD_LIB_OBJS) ctracecmd.i
 	gcc -fpic -c $(PYTHON_INCLUDES)  ctracecmd_wrap.c
 	$(CC) --shared $(TCMD_LIB_OBJS) ctracecmd_wrap.o -o ctracecmd.so
 
-ctracecmdgui.so: $(TRACE_VIEW_OBJS) $(LIB_FILE)
+ctracecmdgui.so: $(TRACE_VIEW_OBJS) $(LIB_FILE) ctracecmdgui.i
 	swig -Wall -python -noproxy ctracecmdgui.i
 	gcc -fpic -c  $(CFLAGS) $(INCLUDES) $(PYTHON_INCLUDES) $(PYGTK_CFLAGS) ctracecmdgui_wrap.c
-	$(CC) --shared $^ $(LIBS) $(CONFIG_LIBS) ctracecmdgui_wrap.o -o ctracecmdgui.so
+	$(CC) --shared $(TRACE_VIEW_OBJS) $(LIBS) $(CONFIG_LIBS) ctracecmdgui_wrap.o -o ctracecmdgui.so
 
 PHONY += python
 python: $(PYTHON)
