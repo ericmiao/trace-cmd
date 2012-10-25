@@ -1,3 +1,9 @@
+trace-cmd (2.0.1-0ubuntu4) precise; urgency=low
+
+  * Add build dependency of python-gtk2-dev
+
+ -- Eric Miao <eric.miao@canonical.com>  Thu, 25 Oct 2012 15:55:24 +0800
+
 trace-cmd (2.0.1-0ubuntu3) precise; urgency=low
 
   * trace-cmd: Add support for python GUI plugins
