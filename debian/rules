@@ -11,11 +11,20 @@ DEB_MAKE_BUILD_TARGET=gui doc $(OPTS)
 DEB_MAKE_INSTALL_TARGET=install_gui install_doc $(OPTS)
 DEB_PYTHON2_MODULE_PACKAGES=trace-cmd
 
+build/kernelshark:: kernelshark.1
+
 install/trace-cmd::
 	chmod a-x debian/tmp/usr/lib/trace-cmd/python/tracecmd*.py
 
 install/kernelshark::
 	chmod a-x debian/tmp/usr/share/kernelshark/html/*
+
+# generate manpages
+DB2MAN = /usr/share/sgml/docbook/stylesheet/xsl/docbook-xsl/manpages/docbook.xsl
+XP     = xsltproc -''-nonet -''-param man.charmap.use.subset "0"
+
+kernelshark.1: debian/kernelshark.1.xml
+	$(XP) $(DB2MAN) $<
 
 # generate orig.tar.xz by git.
 DEB_SOURCE := $(shell dpkg-parsechangelog | grep Source: | sed -e 's/Source: //')
