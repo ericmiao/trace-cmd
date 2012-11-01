@@ -2,9 +2,48 @@
 
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/makefile.mk
+export DEB_BUILD_HARDENING=1
 
-OPTS=CFLAGS+=-D_GNU_SOURCE prefix=/usr plugin_dir=/usr/lib/trace-cmd/plugins python_dir=/usr/lib/trace-cmd/python MANPAGE_DOCBOOK_XSL=/usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl DESTDIR=$(DEB_DESTDIR) V=1
+OPTS=CFLAGS+="-D_GNU_SOURCE" prefix=/usr plugin_dir=/usr/lib/trace-cmd/plugins python_dir=/usr/lib/trace-cmd/python MANPAGE_DOCBOOK_XSL=/usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl DESTDIR=$(DEB_DESTDIR) V=1
 
 DEB_MAKE_CLEAN_TARGET=clean doc_clean $(OPTS)
 DEB_MAKE_BUILD_TARGET=gui doc $(OPTS)
 DEB_MAKE_INSTALL_TARGET=install_gui install_doc $(OPTS)
+DEB_PYTHON2_MODULE_PACKAGES=trace-cmd
+
+build/kernelshark:: kernelshark.1
+
+install/trace-cmd::
+	chmod a-x debian/tmp/usr/lib/trace-cmd/python/tracecmd*.py
+
+install/kernelshark::
+	chmod a-x debian/tmp/usr/share/kernelshark/html/*
+
+# generate manpages
+DB2MAN = /usr/share/sgml/docbook/stylesheet/xsl/docbook-xsl/manpages/docbook.xsl
+XP     = xsltproc -''-nonet -''-param man.charmap.use.subset "0"
+
+kernelshark.1: debian/kernelshark.1.xml
+	$(XP) $(DB2MAN) $<
+
+# generate orig.tar.xz by git.
+DEB_SOURCE := $(shell dpkg-parsechangelog | grep Source: | sed -e 's/Source: //')
+DEB_VERSION := $(shell dpkg-parsechangelog | grep Version: | sed -e 's/Version: //')
+DEB_UPSTREAM_VERSION := $(shell echo $(DEB_VERSION) | sed -e 's/-[^-]*$$//')
+GIT_URL = git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git
+
+get-orig-source::
+	set -e; if echo $(DEB_VERSION) | grep -c "git"; \
+	then \
+		git_version=`echo $(DEB_VERSION) | sed -e 's/^.*git\([0-9]*\)*\.\(.*\)-.*$$/\2/g'`; \
+	else \
+		git_version=$(DEB_UPSTREAM_VERSION); \
+	fi; \
+	tmpdir=`mktemp -d -t`; \
+	cd $$tmpdir; \
+	echo "checkout upstream repository ..."; \
+	git clone $(GIT_URL); echo "getting specific upstream revision/tag: $$git_version"; \
+	cd `ls | head -n 1`; git checkout -b orig $$git_version; cd ..; \
+	tar --exclude=.git -cJvf $(CURDIR)/$(DEB_SOURCE)_$(DEB_UPSTREAM_VERSION).orig.tar.xz `ls | head -n 1`; \
+	cd $(CURDIR); \
+	rm -rf $$tmpdir
