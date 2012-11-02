@@ -1,3 +1,4 @@
 usr/bin/kernelshark
 usr/bin/trace-graph
 usr/bin/trace-view
+usr/share/kernelshark/html usr/share/doc/kernelshark

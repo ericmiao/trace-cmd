@@ -1,3 +1,10 @@
+trace-cmd (2.0.1+git20121008.1776cf9a-1) unstable; urgency=low
+
+  * New upstream release.
+  * Init release for Debian (Closes: #691502)
+
+ -- Eric Miao <eric.miao@canonical.com>  Thu, 01 Nov 2012 00:51:27 +0800
+
 trace-cmd (2.0.1-0ubuntu4) precise; urgency=low
 
   * Add build dependency of python-gtk2-dev
