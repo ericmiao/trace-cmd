@@ -55,10 +55,11 @@ class Event(object):
     This class can be used to access event data
     according to an event's record and format.
     """
-    def __init__(self, pevent, record, format):
+    def __init__(self, pevent, record, format, type):
         self._pevent = pevent
         self._record = record
         self._format = format
+        self.type = type
 
     def __str__(self):
         return "%d.%d CPU%d %s: pid=%d comm=%s type=%d" % \
@@ -96,10 +97,6 @@ class Event(object):
     @cached_property
     def ts(self):
         return pevent_record_ts_get(self._record)
-
-    @cached_property
-    def type(self):
-        return pevent_data_type(self._pevent, self._record)
 
     def num_field(self, name):
         f = pevent_find_any_field(self._format, name)
@@ -151,7 +148,8 @@ class PEvent(object):
         self._pevent = pevent
 
     def _handler(self, cb, s, record, event_fmt):
-        return cb(TraceSeq(s), Event(self._pevent, record, event_fmt))
+        type = pevent_data_type(self._pevent, record)
+        return cb(TraceSeq(s), Event(self._pevent, record, event_fmt, type))
 
     def register_event_handler(self, subsys, event_name, callback):
         l = lambda s, r, e: self._handler(callback, s, r, e)
@@ -196,7 +194,7 @@ class Trace(object):
             type = pevent_data_type(self._pevent, record)
             format = pevent_data_event_from_type(self._pevent, type)
             if type and format:
-                return Event(self._pevent, record, format)
+                return Event(self._pevent, record, format, type)
         return None
 
     def read_event(self, cpu):
