@@ -196,7 +196,8 @@ class Trace(object):
         if record:
             type = pevent_data_type(self._pevent, record)
             format = pevent_data_event_from_type(self._pevent, type)
-            return Event(self._pevent, record, format)
+            if type and format:
+                return Event(self._pevent, record, format)
         return None
 
     def read_event(self, cpu):
