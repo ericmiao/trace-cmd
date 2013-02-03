@@ -185,8 +185,24 @@ class Trace(object):
 
         self.cpus = tracecmd_cpus(self._handle)
         self._pevent = tracecmd_get_pevent(self._handle)
+        self._event_types = None
         self._start_time = None
         self._end_time = None
+
+    @property
+    def event_types(self):
+        """
+        returns a dictionary of event types with its id and system, e.g.
+          { 'cpu_idle' : (16, 'power'), ... }
+        """
+        if self._event_types is None:
+            self._event_types = {}
+            for ef in py_event_get_formats(self._pevent):
+                n = event_format_name_get(ef)
+                self._event_types[n] = (event_format_id_get(ef),
+                                        event_format_system_get(ef))
+
+        return self._event_types
 
     @property
     def start_time(self, cpu = -1):

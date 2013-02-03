@@ -117,6 +117,27 @@ static PyObject *py_format_get_keys(struct event_format *ef)
 
 	return list;
 }
+
+static PyObject *py_event_get_formats(struct pevent *pe)
+{
+        PyObject *list;
+        struct event_format *ef;
+        int i;
+
+        list = PyList_New(0);
+
+        for (i = 0; i < pe->nr_events; i++) {
+                if (ef = pe->events[i]) {
+                        if (PyList_Append(list,
+                                SWIG_NewPointerObj(SWIG_as_voidptr(ef),
+                                        SWIGTYPE_p_event_format, 0))) {
+                                Py_DECREF(list);
+                                return NULL;
+                        }
+                }
+        }
+        return list;
+}
 %}
 
 
