@@ -60,6 +60,9 @@ class Event(object):
         self._record = record
         self._format = format
         self.type = type
+        self.cpu = pevent_record_cpu_get(record)
+        self.ts  = pevent_record_ts_get(record)
+        self.name = event_format_name_get(format)
 
     def __str__(self):
         return "%d.%d CPU%d %s: pid=%d comm=%s type=%d" % \
@@ -83,20 +86,8 @@ class Event(object):
         return pevent_data_comm_from_pid(self._pevent, self.pid)
 
     @cached_property
-    def cpu(self):
-        return pevent_record_cpu_get(self._record)
-
-    @cached_property
-    def name(self):
-        return event_format_name_get(self._format)
-
-    @cached_property
     def pid(self):
         return pevent_data_pid(self._pevent, self._record)
-
-    @cached_property
-    def ts(self):
-        return pevent_record_ts_get(self._record)
 
     def num_field(self, name):
         f = pevent_find_any_field(self._format, name)
