@@ -183,11 +183,8 @@ class Trace(object):
         if tracecmd_init_data(self._handle):
             raise FileFormatError("Failed to init data")
 
+        self.cpus = tracecmd_cpus(self._handle)
         self._pevent = tracecmd_get_pevent(self._handle)
-
-    @cached_property
-    def cpus(self):
-        return tracecmd_cpus(self._handle)
 
     def record_to_event(self, record):
         if record:
