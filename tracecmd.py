@@ -55,6 +55,9 @@ class Event(object):
     This class can be used to access event data
     according to an event's record and format.
     """
+    __slots__ = ('_pevent', '_record', '_format', 'type', 'cpu', 'ts',
+                 'name', '_comm', '_pid')
+
     def __init__(self, pevent, record, format, type):
         self._pevent = pevent
         self._record = record
