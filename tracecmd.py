@@ -185,6 +185,44 @@ class Trace(object):
 
         self.cpus = tracecmd_cpus(self._handle)
         self._pevent = tracecmd_get_pevent(self._handle)
+        self._start_time = None
+        self._end_time = None
+
+    @property
+    def start_time(self, cpu = -1):
+        """
+        returns the timestamp of the first event on specified CPU, a default of
+        cpu == -1 means the first event on all CPUs, which is kept as the last
+        element in the _start_time[] list, as could be referenced by [-1]
+        """
+        if self._start_time is None:
+            self._start_time = []
+            for cpu in range(0, self.cpus):
+                rec = tracecmd_read_cpu_first(self._handle, cpu)
+                self._start_time.append(pevent_record_ts_get(rec) if rec else 0)
+
+            ts = min(filter(lambda v: v > 0, self._start_time))
+            self._start_time.append(ts)
+
+        return self._start_time[cpu]
+
+    @property
+    def end_time(self, cpu = -1):
+        """
+        returns the timestamp of the last event on specified CPU, a default of
+        cpu == -1 means the last event on all CPUs, which is kept as the last
+        element in the _end_time[] list, as could be referenced by [-1]
+        """
+        if self._end_time is None:
+            self._end_time = []
+            for cpu in range(0, self.cpus):
+                rec = tracecmd_read_cpu_last(self._handle, cpu)
+                self._end_time.append(pevent_record_ts_get(rec) if rec else 0)
+
+            ts = max(filter(lambda v: v > 0, self._end_time))
+            self._end_time.append(ts)
+
+        return self._end_time[cpu]
 
     def record_to_event(self, record):
         if record:
