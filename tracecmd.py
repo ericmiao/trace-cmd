@@ -250,6 +250,25 @@ class Trace(object):
             return None
         return self.record_to_event(rec)
 
+    def rewind(self, cpu = -1, start_time = 0):
+        if cpu in range(0, self.cpus):
+            tracecmd_set_cpu_to_timestamp(self._handle, cpu, start_time)
+        else:
+            tracecmd_set_all_cpus_to_timestamp(self._handle, start_time)
+
+    def events(self, cpu = -1, start_time = 0, end_time = 0):
+        target_cpu = cpu
+        for cpu in range(0, self.cpus):
+            if target_cpu == cpu or target_cpu == -1:
+                self.rewind(cpu, start_time)
+                while True:
+                    event = self.read_event(cpu)
+                    if not event:
+                        break
+                    if end_time > 0 and event.ts > end_time:
+                        break
+                    yield event
+
 
 # Basic builtin test, execute module directly
 if __name__ == "__main__":
