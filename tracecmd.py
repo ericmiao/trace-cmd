@@ -192,14 +192,16 @@ class Trace(object):
     def cpus(self):
         return tracecmd_cpus(self._handle)
 
+    def record_to_event(self, record):
+        if record:
+            type = pevent_data_type(self._pevent, record)
+            format = pevent_data_event_from_type(self._pevent, type)
+            return Event(self._pevent, record, format)
+        return None
+
     def read_event(self, cpu):
         rec = tracecmd_read_data(self._handle, cpu)
-        if rec:
-            type = pevent_data_type(self._pevent, rec)
-            format = pevent_data_event_from_type(self._pevent, type)
-            # rec ownership goes over to Event instance
-            return Event(self._pevent, rec, format)
-        return None
+        return self.record_to_event(rec)
 
     def read_event_at(self, offset):
         res = tracecmd_read_at(self._handle, offset)
@@ -207,19 +209,13 @@ class Trace(object):
         if isinstance(res, int):
             return None
         rec, cpu = res
-        type = pevent_data_type(self._pevent, rec)
-        format = pevent_data_event_from_type(self._pevent, type)
-        # rec ownership goes over to Event instance
-        return Event(self._pevent, rec, format)
+        return self.record_to_event(rec)
 
     def peek_event(self, cpu):
         rec = tracecmd_peek_data_ref(self._handle, cpu)
         if rec is None:
             return None
-        type = pevent_data_type(self._pevent, rec)
-        format = pevent_data_event_from_type(self._pevent, type)
-        # rec ownership goes over to Event instance
-        return Event(self._pevent, rec, format)
+        return self.record_to_event(rec)
 
 
 # Basic builtin test, execute module directly
