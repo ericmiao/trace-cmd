@@ -269,6 +269,19 @@ class Trace(object):
                         break
                     yield event
 
+    def records(self, cpu = -1, start_time = 0, end_time = 0):
+        target_cpu = cpu
+        for cpu in range(0, self.cpus):
+            if target_cpu == cpu or target_cpu == -1:
+                self.rewind(cpu, start_time)
+                while True:
+                    record = tracecmd_read_data(self._handle, cpu)
+                    if not record:
+                        break
+                    ts = pevent_record_ts_get(record)
+                    if end_time > 0 and ts > end_time:
+                        break
+                    yield record
 
 # Basic builtin test, execute module directly
 if __name__ == "__main__":
